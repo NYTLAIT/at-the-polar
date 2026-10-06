@@ -10,11 +10,12 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <Routes>
-        <Route path='/login' element={<Login />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path='/' element={<Login />} />
         <Route path='/stations' element={<Stations />}>
-          <Route path='/station/:id' element={<Station />} />
+          <Route path=':id' element={<Station />} />
         </Route>
       </Routes>
     </Router>
-  </StrictMode>,
+  </StrictMode>
 )
