@@ -19,6 +19,7 @@ const corsConfig = {
 const io = new Server(httpServer, corsConfig)
 
 // ---- ROUTES --------------------------------------------
+
 const userslist = []
 
 io.on('connection', (socket) => {
