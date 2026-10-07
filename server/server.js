@@ -17,24 +17,10 @@ const corsConfig = {
 
 // SOCKET.IO INITIALIZATION
 const io = new Server(httpServer, corsConfig)
-
-// ---- ROUTES --------------------------------------------
-
-const userslist = []
-
-io.on('connection', (socket) => {
-  console.log(`Socket connected: ${socket.id}`)
-
-  socket.on('register user', (username) => {
-    console.log(`${username} has connected with socket ${socket.id}`)
-
-    userslist.push(username)
-
-    io.emit('userslist', userslist)
-  })
-})
+// ---- ROUTES ----------------------------------------------
 
 // ---- LISTENER --------------------------------------------
+
 const port = 3000
 
 httpServer.listen(port, () => {
