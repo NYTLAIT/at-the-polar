@@ -24,10 +24,14 @@ export function setConnection(io, state) {
     })
 
     socket.on('disconnect', () => {
-      const user = state.users.get(username)
-      if (user) { user.station = null }
+      const username = socket.username
+      if (!username) return
 
-      if (socket.username) { state.connections.delete(socket.username) }
+      const user = state.users.get(username)
+      user.station = null
+
+      state.connections.delete(socket.username)
+      console.log(state.connections)
     })
   })
 }
