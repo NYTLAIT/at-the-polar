@@ -1,12 +1,21 @@
-function Login() {
+import { useNavigate } from "react-router"
+import { connect } from "./socket/clientEvents"
 
-  function trySubmit() {
-    console.log('form working')
+function Login() {
+  const navigate = useNavigate()
+
+  function login(form) {
+    const username = form.get('username')
+    const role = form.get('role')
+
+    connect(username, role, () => {
+      navigate('/stations')
+    })
   }
 
   return (
     <div className='Login'>
-      <form action={trySubmit}>
+      <form action={login}>
 
         {/* ROLE */}
         <fieldset>

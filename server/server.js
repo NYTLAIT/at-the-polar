@@ -3,6 +3,8 @@ import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import cors from 'cors'
 
+import { setFeatures } from './state.js'
+
 // EXPRESS & HTTP INTILIAZATION
 const app = express()
 const httpServer = createServer(app)
@@ -17,7 +19,10 @@ const corsConfig = {
 
 // SOCKET.IO INITIALIZATION
 const io = new Server(httpServer, corsConfig)
+
 // ---- ROUTES ----------------------------------------------
+
+setFeatures(io)
 
 // ---- LISTENER --------------------------------------------
 

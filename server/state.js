@@ -1,3 +1,5 @@
+import { setConnection } from "./serverEvents.js"
+
 export function setFeatures(io) {
   const state = {
     // Tracks users
@@ -7,5 +9,9 @@ export function setFeatures(io) {
     // Stations && Messages
     stations: new Map()
   }
+
+  setConnection(io, state)
 }
+
+
 

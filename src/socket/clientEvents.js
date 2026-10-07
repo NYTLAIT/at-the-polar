@@ -3,13 +3,16 @@ import { io } from 'socket.io-client'
 // Connection Handle
 let socket = null
 
-export function connect(username, role, url) {
+export function connect(username, role, onLoginSuccess) {
   if (socket) return
-  const URL = url ?? import.meta.env.VITE_SOCKET_URL ?? 'http://localhost:3000'
-  socket = io(URL)
+  socket = io('http://localhost:3000')
 
-  socket.on('connection', () => {
+  socket.on('connect', () => {
     socket.emit('login', username, role)
+  })
+
+  socket.on('loginSuccess', () => {
+    onLoginSuccess?.()
   })
 }
 
