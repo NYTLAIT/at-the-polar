@@ -41,21 +41,25 @@ export function setStations(io, socket, state) {
   socket.on('getStations', (setStations) => {
     const user = state.users.get(socket.data.username)
 
-    const stations = [...user.stations.values()]
-    setStations(stations)
+    setStations({
+      role: user.role,
+      allStations: [...state.stations.keys()],
+      subscribed: user.stations.subscribed,
+      memberOf: user.stations.memberOf ?? []
+    })
   })
 
-  socket.on('createStation', (stationName, creationResult) => {
+  socket.on('createStation', (stationName, creationResultAlert) => {
     const user = state.users.get(socket.data.username)
 
     if (user.role !== 'researcher') {
-      return creationResult('Only researchers can create stations')
+      return creationResultAlert('Only researchers can create stations')
     }
     if (!stationName?.trim()) {
-      return creationResult('Station needs a name')
+      return creationResultAlert('Station needs a name')
     }
     if (state.stations.has(stationName)) {
-      return creationResult('Station name taken')
+      return creationResultAlert('Station name taken')
     }
 
     // Update state
@@ -64,6 +68,6 @@ export function setStations(io, socket, state) {
 
     // Update everybody about state
     io.emit('stationsChanged')
-    creationResult('New Station Created!')
+    creationResultAlert('New Station Created!')
   })
 }

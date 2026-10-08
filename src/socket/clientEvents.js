@@ -1,9 +1,12 @@
 import { io } from 'socket.io-client'
 
-// Connection Handle
+// REMEMBER SOCKET AFTER CONNECT
 let socket = null
+export const isConnected = () => socket !== null
 
-// CONNECT USER && SET SOCKET
+// ------ LOGIN AND DISCONNECT --------------------------------
+
+// -- CONNECT USER && SET SOCKET --
 export function connect(username, role, onLoginSuccess) {
   if (socket) return
   socket = io('http://localhost:3000')
@@ -17,26 +20,28 @@ export function connect(username, role, onLoginSuccess) {
   })
 }
 
-// DISCONNECT USER
+// -- DISCONNECT USER --
 export function disconnect() {
   socket?.disconnect()
   socket = null
 }
 
-// POPULATE STATIONS AND HANDLE UPDATES
+// ------ SETTING STATIONS -----------------------------------
+
+// -- POPULATE STATIONS AND HANDLE UPDATES --
 export function getStations(setStations) {
+  if (!socket) return () => { }
+
   const loadStations = () => socket.emit('getStations', setStations)
 
-  // First load
-  loadStations()
-  // Continuous
-  socket.on('stationsChanged', loadStations)
+  loadStations() // First load
+  socket.on('stationsChanged', loadStations) // Continuous
 
-  // Cleanup for strictmode
-  return () => socket.off('stationsChanged', loadStations)
+  return () => socket.off('stationsChanged', loadStations) // Cleanup for strictmode
 }
 
-// CREATE STATIONS
-export function createStation(stationName, creationResult) {
-  socket.emit('stationCreationResult', stationName, creationResult)
+// -- CREATE STATIONS --
+export function createStation(stationName, creationResultAlert) {
+  if (!socket) return
+  socket.emit('createStation', stationName, creationResultAlert)
 }
