@@ -124,6 +124,27 @@ export function setStations(io, socket, state) {
 }
 
 // ------ SETTING MESSAGES -----------------------------------
+// MESSAGE BUILDER
+function buildMessage(username, text) {
+  return {
+    messageId: crypto.randomUUID(),
+    user: username,
+    timestamp: Date.now(),
+    message: text,
+    replies: [],
+  }
+}
+// FIND MESSAGE
+function findMessage(messages, messageId) {
+  for (const message of messages) {
+    if (message.messageId === messageId) return message // 
+    const foundMessage = findMessage(message.replies, messageId) // pass messages replies
+
+    if (foundMessage) return foundMessage
+  }
+  return null
+}
+
 export function setMessages(io, socket, state) {
   const getUser = () => state.users.get(socket.data.username)
 
@@ -141,7 +162,7 @@ export function setMessages(io, socket, state) {
     const station = station.stations.get(stationName)
     if (!user || !station) return resultAlert?.('Station not found')
 
-    const message = text?.trim
+    const message = message?.trim
 
   })
 
