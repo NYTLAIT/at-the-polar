@@ -7,7 +7,7 @@ function Message({ messageObject, canReply, onReply }) {
     <li>
       <p>{messageObject.timestamp}</p>
       <strong>{messageObject.user}</strong>
-      <p>{messageObjectmessage.message}</p>
+      <p>{messageObject.message}</p>
       {canReply && <button onClick={() => onReply(messageObject)}>Reply</button>}
 
       {messageObject.replies.length > 0 && (

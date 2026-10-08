@@ -155,7 +155,7 @@ export function handleMessages(io, socket, state) {
 
   // GET MESSAGES OF A STATION
   socket.on('getMessages', (stationName, setMessages) => {
-    const station = station.stations.get(stationName)
+    const station = state.stations.get(stationName)
     if (!getUser() || !station) return setMessages?.([])
 
     setMessages?.(station.messages)
@@ -171,7 +171,7 @@ export function handleMessages(io, socket, state) {
     if (!message) return resultAlert?.('Message is empty')
 
     const isMember = user.stations.memberOf?.includes(stationName)
-    if (user.role !== 'researcher' && !isMember) {
+    if (user.role !== 'researcher' || !isMember) {
       return resultAlert?.('Only the station researchers can post')
     }
 
@@ -181,7 +181,7 @@ export function handleMessages(io, socket, state) {
   })
 
   // REPLY TO MESSAGES
-  socket.on('replyToMessages', (stationName, messageId, text, resultAlert) => {
+  socket.on('replyToMessage', (stationName, messageId, text, resultAlert) => {
     const user = getUser()
     const station = state.stations.get(stationName)
     if (!user || !station) return resultAlert?.('Station not found')
@@ -194,6 +194,9 @@ export function handleMessages(io, socket, state) {
     if (!canReply) return resultAlert?.('Subscribe or join to reply')
 
     const targetMessage = findMessage(station.messages, messageId)
+    if (!targetMessage) {
+      return resultAlert?.('Message not found')
+    }
 
     targetMessage.replies.push(buildMessage(socket.data.username, message))
     io.emit('messagesChanged', stationName)

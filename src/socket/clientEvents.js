@@ -89,4 +89,3 @@ export function replyToMessage(stationName, messageId, text, resultAlert) {
   if (!socket) return
   socket.emit('replyToMessage', stationName, messageId, text, resultAlert)
 }
-
