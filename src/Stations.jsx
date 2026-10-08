@@ -1,12 +1,14 @@
 import { Outlet } from 'react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 
-
+import { getStations } from './socket/clientEvents'
 
 function Stations() {
-  const [stations, setStations] = useState()
+  const [stations, setStations] = useState([])
+
+  useEffect(() => getStations(setStations), [])
 
   return (
     <div>
@@ -14,8 +16,11 @@ function Stations() {
 
       {/* STATIONS LIST */}
       <div className='Stations'>
+        {stations.length === 0 && <p>No stations yet</p>}
 
-        {stations.map()}
+        {stations.map((station) => (
+          <button key={station.name}>{station.name}</button>
+        ))}
       </div>
 
       {/* STATION CHAT */}

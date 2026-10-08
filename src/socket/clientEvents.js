@@ -23,12 +23,20 @@ export function disconnect() {
   socket = null
 }
 
-// POPULATE STATIONS 
-export function getStations(onStations) {
-  socket.emit('getStations', onGetStationsSuccess)
+// POPULATE STATIONS AND HANDLE UPDATES
+export function getStations(setStations) {
+  const loadStations = () => socket.emit('getStations', setStations)
+
+  // First load
+  loadStations()
+  // Continuous
+  socket.on('stationsChanged', loadStations)
+
+  // Cleanup for strictmode
+  return () => socket.off('stationsChanged', loadStations)
 }
+
 // CREATE STATIONS
 export function createStation(stationName, creationResult) {
-  socket.emit()
-  socket.on('stationCreationResult', creationResult, stations)
+  socket.emit('stationCreationResult', stationName, creationResult)
 }

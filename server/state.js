@@ -1,4 +1,5 @@
 import { setConnection } from "./serverEvents.js"
+import { setStations } from "./serverEvents.js"
 
 export function setFeatures(io) {
   const state = {

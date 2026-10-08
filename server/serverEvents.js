@@ -30,7 +30,7 @@ export function setConnection(socket, state) {
     const user = state.users.get(username)
     user.station = null
 
-    state.connections.delete(socket.username)
+    state.connections.delete(socket.data.username)
     console.log(state.connections)
   })
 }
@@ -38,11 +38,11 @@ export function setConnection(socket, state) {
 // ------ SETTING STATIONS -----------------------------------
 export function setStations(io, socket, state) {
   // GET USER STATIONS LIST
-  socket.on('getStations', (onGetStationsSuccess) => {
+  socket.on('getStations', (setStations) => {
     const user = state.users.get(socket.data.username)
 
-    const stations = [...state.stations.values()]
-    onGetStationsSuccess(stations)
+    const stations = [...user.stations.values()]
+    setStations(stations)
   })
 
   socket.on('createStation', (stationName, creationResult) => {
@@ -58,7 +58,12 @@ export function setStations(io, socket, state) {
       return creationResult('Station name taken')
     }
 
-    io.emit('changeStations')
-    return creationResult('New Station Created!')
+    // Update state
+    state.stations.set(stationName, { messages: [] })
+    user.stations.memberOf.push(stationName)
+
+    // Update everybody about state
+    io.emit('stationsChanged')
+    creationResult('New Station Created!')
   })
 }
