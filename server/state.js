@@ -12,7 +12,7 @@ export function setFeatures(io) {
 
   io.on('connection', socket => {
     setConnection(socket, state)
-    setStations(socket, state)
+    setStations(io, socket, state)
   })
 }
 

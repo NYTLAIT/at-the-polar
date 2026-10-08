@@ -2,7 +2,7 @@
 export function setConnection(socket, state) {
   socket.on('login', (username, role) => {
     // CONNECTION
-    socket.username = username
+    socket.data.username = username
     state.connections.set(username, socket.id)
 
     // PERSISTENT USER
@@ -17,7 +17,6 @@ export function setConnection(socket, state) {
       })
     }
 
-    state.connections.set(username, socket.id)
     console.log(state.connections)
 
     socket.emit('loginSuccess')
@@ -25,7 +24,7 @@ export function setConnection(socket, state) {
 
   // DISCONNECT
   socket.on('disconnect', () => {
-    const username = socket.username
+    const username = socket.data.username
     if (!username) return
 
     const user = state.users.get(username)
@@ -37,12 +36,29 @@ export function setConnection(socket, state) {
 }
 
 // ------ SETTING STATIONS -----------------------------------
-export function setStations(io, state) {
-  socket.on('callStations', (socket) => {
-    const username = socket.username
-    const user = state.users.get(username)
+export function setStations(io, socket, state) {
+  // GET USER STATIONS LIST
+  socket.on('getStations', (onGetStationsSuccess) => {
+    const user = state.users.get(socket.data.username)
 
+    const stations = [...state.stations.values()]
+    onGetStationsSuccess(stations)
+  })
 
-    socket.emit('forwardStations', stations)
+  socket.on('createStation', (stationName, creationResult) => {
+    const user = state.users.get(socket.data.username)
+
+    if (user.role !== 'researcher') {
+      return creationResult('Only researchers can create stations')
+    }
+    if (!stationName?.trim()) {
+      return creationResult('Station needs a name')
+    }
+    if (state.stations.has(stationName)) {
+      return creationResult('Station name taken')
+    }
+
+    io.emit('changeStations')
+    return creationResult('New Station Created!')
   })
 }

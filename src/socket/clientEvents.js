@@ -23,10 +23,12 @@ export function disconnect() {
   socket = null
 }
 
-
 // POPULATE STATIONS 
-export function getStations(callback) {
-  socket.emit('callStations')
-
-  socket.on('forwardStations')
+export function getStations(onStations) {
+  socket.emit('getStations', onGetStationsSuccess)
+}
+// CREATE STATIONS
+export function createStation(stationName, creationResult) {
+  socket.emit()
+  socket.on('stationCreationResult', creationResult, stations)
 }
