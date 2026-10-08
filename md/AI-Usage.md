@@ -5,3 +5,4 @@
 - Rerouting logic to handle refreshes
 - Styling chat box
 - Modal help (help modifying old code to git current proj)
+- Callback optimization and patterns

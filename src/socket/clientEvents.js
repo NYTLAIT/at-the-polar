@@ -37,7 +37,7 @@ export function getStations(setStations) {
   loadStations() // First load
   socket.on('stationsChanged', loadStations) // Continuous
 
-  return () => socket.off('stationsChanged', loadStations) // Cleanup for strictmode
+  return () => socket.off('stationsChanged', loadStations) // Strictmode cleaning
 }
 
 // -- CREATE STATIONS --
@@ -52,7 +52,41 @@ function stationAction(event, stationName, resultAlert) {
   socket.emit(event, stationName, resultAlert)
 }
 
-export const subscribeStation = (stationName, resultAlert) => stationAction('subscribeStation', stationName, resultAlert)
-export const unsubscribeStation = (stationName, resultAlert) => stationAction('unsubscribeStation', stationName, resultAlert)
-export const joinStation = (stationName, resultAlert) => stationAction('joinStation', stationName, resultAlert)
-export const leaveStation = (stationName, resultAlert) => stationAction('leaveStation', stationName, resultAlert)
+export const subscribeStation = (stationName, resultAlert) => {
+  stationAction('subscribeStation', stationName, resultAlert)
+}
+export const unsubscribeStation = (stationName, resultAlert) => {
+  stationAction('unsubscribeStation', stationName, resultAlert)
+}
+export const joinStation = (stationName, resultAlert) => {
+  stationAction('joinStation', stationName, resultAlert)
+}
+export const leaveStation = (stationName, resultAlert) => {
+  stationAction('leaveStation', stationName, resultAlert)
+}
+
+// ------ SETTING MESSAGES -----------------------------------
+export function getMessages(stationName, setMessages) {
+  if (!socket) return () => { }
+
+  const loadMessages = () => socket.emit('getMessages', stationName, setMessages)
+
+  loadMessages()
+  const onMessagesChanged = (changedStation) => { // Listen for Station on only
+    if (changedStation === stationName) loadMessages()
+  }
+  socket.on('messagesChanged', onMessagesChanged)
+
+  return () => socket.off('messagesChanged', onMessagesChanged)
+}
+
+export function postMessage(stationName, text, resultAlert) {
+  if (!socket) return
+  socket.emit('postMessage', stationName, text, resultAlert)
+}
+
+export function replyToMessage(stationName, messageId, text, resultAlert) {
+  if (!socket) return
+  socket.emit('replyToMessage', stationName, messageId, text, resultAlert)
+}
+
