@@ -1,5 +1,5 @@
 // ------ LOGIN AND DISCONNECT --------------------------------
-export function setConnection(socket, state) {
+export function handleConnection(socket, state) {
   socket.on('login', (username, role) => {
     // CONNECTION
     socket.data.username = username
@@ -36,7 +36,7 @@ export function setConnection(socket, state) {
 }
 
 // ------ SETTING STATIONS -----------------------------------
-export function setStations(io, socket, state) {
+export function handleStations(io, socket, state) {
   const getUser = () => state.users.get(socket.data.username)
 
   // GET USER STATIONS LIST
@@ -74,8 +74,8 @@ export function setStations(io, socket, state) {
     creationResultAlert('New Station Created!')
   })
 
-  // SUBSCRIPTIONS && JOINS
-  // Subscibe
+  // -- SUBSCRIPTIONS && JOINS
+  // SUBSCRIBE
   socket.on('subscribeStation', (stationName, resultAlert) => {
     const user = getUser()
     if (!user) return
@@ -87,7 +87,7 @@ export function setStations(io, socket, state) {
     socket.emit('stationsChanged')
     resultAlert?.(`Subscribed to ${stationName}`)
   })
-  // Unsubscibe
+  // UNSUBSCRIBE
   socket.on('unsubscribeStation', (stationName, resultAlert) => {
     const user = getUser()
     if (!user) return
@@ -96,7 +96,7 @@ export function setStations(io, socket, state) {
     socket.emit('stationsChanged')
     resultAlert?.(`Unsubscribed to ${stationName}`)
   })
-  // Join
+  // JOIN
   socket.on('joinStation', (stationName, resultAlert) => {
     const user = getUser()
     if (!user) return
@@ -109,7 +109,7 @@ export function setStations(io, socket, state) {
     socket.emit('stationsChanged')
     resultAlert?.(`Joined ${stationName}`)
   })
-  // Unjoin
+  // LEAVE
   socket.on('leaveStation', (stationName, resultAlert) => {
     const user = getUser()
     if (!user) return
@@ -123,7 +123,10 @@ export function setStations(io, socket, state) {
   })
 }
 
+// -- JOINING ROOMS
+
 // ------ SETTING MESSAGES -----------------------------------
+// Note: text is incoming, message is state
 // MESSAGE BUILDER
 function buildMessage(username, text) {
   return {
@@ -145,7 +148,9 @@ function findMessage(messages, messageId) {
   return null
 }
 
-export function setMessages(io, socket, state) {
+// -- END! OF HELPER FUNCTIONS
+
+export function handleMessages(io, socket, state) {
   const getUser = () => state.users.get(socket.data.username)
 
   // GET MESSAGES OF A STATION
@@ -157,13 +162,41 @@ export function setMessages(io, socket, state) {
   })
 
   // SEND MESSAGE
-  socket.on('sendMessage', (stationName, message, resultAlert) => {
+  socket.on('postMessage', (stationName, text, resultAlert) => {
     const user = getUser()
-    const station = station.stations.get(stationName)
+    const station = state.stations.get(stationName)
     if (!user || !station) return resultAlert?.('Station not found')
 
-    const message = message?.trim
+    const message = text?.trim()
+    if (!message) return resultAlert?.('Message is empty')
 
+    const isMember = user.stations.memberOf?.includes(stationName)
+    if (user.role !== 'researcher' && !isMember) {
+      return resultAlert?.('Only the station researchers can post')
+    }
+
+    station.messages.push(buildMessage(socket.data.username, message))
+    io.emit('messagesChanged', stationName)
+    resultAlert?.('Posted')
   })
 
+  // REPLY TO MESSAGES
+  socket.on('replyToMessages', (stationName, messageId, text, resultAlert) => {
+    const user = getUser()
+    const station = state.stations.get(stationName)
+    if (!user || !station) return resultAlert?.('Station not found')
+
+    const message = text?.trim()
+    if (!message) return resultAlert?.('Reply is empty')
+
+    const { subscribed, memberOf } = user.stations
+    const canReply = subscribed.includes(stationName) || memberOf?.includes(stationName)
+    if (!canReply) return resultAlert?.('Subscribe or join to reply')
+
+    const targetMessage = findMessage(station.messages, messageId)
+
+    targetMessage.replies.push(buildMessage(socket.data.username, message))
+    io.emit('messagesChanged', stationName)
+    resultAlert?.('Replied')
+  })
 }

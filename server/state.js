@@ -1,5 +1,6 @@
-import { setConnection } from "./serverEvents.js"
-import { setStations } from "./serverEvents.js"
+import { handleConnection } from "./serverEvents.js"
+import { handleStations } from "./serverEvents.js"
+import { handleMessages } from "./serverEvents.js"
 
 export function setFeatures(io) {
   const state = {
@@ -12,8 +13,9 @@ export function setFeatures(io) {
   }
 
   io.on('connection', socket => {
-    setConnection(socket, state)
-    setStations(io, socket, state)
+    handleConnection(socket, state)
+    handleStations(io, socket, state)
+    handleMessages(io, socket, state)
   })
 }
 
