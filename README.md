@@ -37,7 +37,7 @@ At The Polar uses WebSockets for:
 1. Check if already have node and npm
 2. Clone repo and navigate to
 3. Install dependencies `npm install`
-    - module https://github.com/NYTLAIT/at-the-polar-module must be cloned
+    - module https://github.com/NYTLAIT/at-the-polar-module must be cloned | publishing npm in process
 4. Start the server with `node server.js`
 5. Start the client with `npm run dev`
 6. Open the Vite typically on `http://localhost:5173`
