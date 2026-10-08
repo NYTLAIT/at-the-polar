@@ -126,4 +126,8 @@ export function setStations(io, socket, state) {
 // ------ SETTING MESSAGES -----------------------------------
 export function setMessages(io, socket, state) {
   const getUser = () => state.users.get(socket.data.username)
+
+  // GET MESSAGES OF A STATION
+  socket.on('getMessages', (stationName, messages))
+
 }
