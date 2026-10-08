@@ -43,7 +43,9 @@ At The Polar uses WebSockets for:
 6. Open the Vite typically on `http://localhost:5173`
 
 # Future Improvements
+- Documentation
 - Styling
+- Optimization and Organization
 - Database persistence
 - Authentication
 - Message pagination
