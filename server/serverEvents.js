@@ -67,12 +67,10 @@ export function setStations(io, socket, state) {
       return creationResultAlert('Station name taken')
     }
 
-    // Update state
-    state.stations.set(stationName, { messages: [] })
+    state.stations.set(stationName, { messages: [] }) // Add station to state
     user.stations.memberOf.push(stationName)
 
-    // Update everybody about state
-    io.emit('stationsChanged')
+    io.emit('stationsChanged') // Update everybody about state
     creationResultAlert('New Station Created!')
   })
 
@@ -105,7 +103,7 @@ export function setStations(io, socket, state) {
     resultAlert?.(`Joined ${stationName}`)
   })
   // Unjoin
-  socket.on('unjoinStation', (stationName, resultAlert) => {
+  socket.on('leaveStation', (stationName, resultAlert) => {
     const user = getUser()
     if (user.role !== 'researcher') {
       return resultAlert?.('Only researchers can join stations')

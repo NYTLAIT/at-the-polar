@@ -45,3 +45,14 @@ export function createStation(stationName, creationResultAlert) {
   if (!socket) return
   socket.emit('createStation', stationName, creationResultAlert)
 }
+
+// -- SUBSCRIPTIONS AND JOINS --
+function stationAction(event, stationName, resultAlert) {
+  if (!socket) return
+  socket.emit(event, stationName, resultAlert)
+}
+
+export const subscribeStation = (stationName, resultAlert) => stationAction('subscribeStation', stationName, resultAlert)
+export const unsubscribeStation = (stationName, resultAlert) => stationAction('unsubscribeStation', stationName, resultAlert)
+export const joinStation = (stationName, resultAlert) => stationAction('joinStation', stationName, resultAlert)
+export const leaveStation = (stationName, resultAlert) => stationAction('leaveStation', stationName, resultAlert)
