@@ -3,7 +3,7 @@ A real-time research station communication modeled after fandom platforms.
 
 Users can create research stations, subscribe to stations, join stations as researchers, post updates, engage in threaded discussions.
 
-# Websockets
+# Websocket Use
 At The Polar uses WebSockets for:
 - Live station updates
 - Interactive discussions
