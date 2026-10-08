@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Header from './Header'
 import Footer from './Footer'
 import StationsThumbnail from './StationsThumbnail'
+import './App.css'
 
 import { getStations } from './socket/clientEvents'
 import { createStation } from './socket/clientEvents'
@@ -16,15 +17,27 @@ function Stations() {
   })
   useEffect(() => getStations(setStations), [])
 
-  const memberOf = stations.memberOf
-  const subscribed = stations.subscribed
+  const { memberOf, subscribed } = stations
   const other = stations.allStations.filter((station) =>
-    stations.subscribed.includes(station))
+    !subscribed.includes(station) &&
+    !memberOf.includes(station)
+  )
 
   function handleStationCreation() {
     const stationName = window.prompt('Station name?')
+    if (!stationName?.trim()) return
     createStation(stationName, console.log)
   }
+
+  const renderStation = (station) => (
+    <StationsThumbnail
+      key={station}
+      stationName={station}
+      role={stations.role}
+      isSubscribed={subscribed.includes(station)}
+      isMember={memberOf.includes(station)}
+    />
+  )
 
   return (
     <div>
@@ -37,7 +50,7 @@ function Stations() {
           <button onClick={handleStationCreation}>+ New station</button>
         }
         {/* -- Handle if no stations yet */}
-        {stations.length === 0 && <p>No stations yet</p>}
+        {stations.allStations.length === 0 && <p>No stations yet</p>}
 
         {/* -- STATIONS */}
         <div className="stationsList">
@@ -45,27 +58,21 @@ function Stations() {
           {memberOf.length > 0 && (
             <>
               <h4>MEMBER OF</h4>
-              {memberOf.map(station =>
-                <StationsThumbnail key={station} station={station} />
-              )}
+              {memberOf.map(renderStation)}
             </>
           )}
           {/* Subscribed */}
           {subscribed.length > 0 && (
             <>
-              <h4>Subscribed</h4>
-              {subscribed.map(station =>
-                <StationsThumbnail key={station} station={station} />
-              )}
+              <h4>SUBSCRIBED</h4>
+              {subscribed.map(renderStation)}
             </>
           )}
           {/* Other */}
           {other.length > 0 && (
             <>
-              <h4>All Stations</h4>
-              {subscribed.map(station =>
-                <StationsThumbnail key={station} station={station} />
-              )}
+              <h4>ALL STATIONS</h4>
+              {other.map(renderStation)}
             </>
           )}
         </div>

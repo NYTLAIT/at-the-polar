@@ -1,29 +1,37 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Link } from "react-router"
-import StationsOptionsModal from "./StationsOptionsModal"
+
+import { useClickOutside } from "./hooks/useClickOutside"
+import StationsOptionsMenu from "./StationsOptionsMenu"
 
 
 function StationsThumbnail({ stationName, role, isSubscribed, isMember }) {
-  const [modalOpen, setModalOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const wrapperRef = useRef(null)
+
+  useClickOutside(wrapperRef, () => setMenuOpen(false))
+
   return (
-    <div className="StationsThumbnail">
+    <div className="StationsThumbnail" ref={wrapperRef}>
       <Link className="StationsThumbnail-link" to={`/stations/${encodeURIComponent(stationName)}`}>
         {stationName}
       </Link>
 
       <button
+        className="StationsThumbnail-menuButton"
         aria-label={`Options for ${stationName}`}
-        onClick={() => setModalOpen(true)}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen(!menuOpen)}
       >⋮
       </button>
 
-      {modalOpen && (
-        <StationsOptionsModal
-          name={stationName}
+      {menuOpen && (
+        <StationsOptionsMenu
+          stationName={stationName}
           role={role}
           isSubscribed={isSubscribed}
           isMember={isMember}
-          onClose={() => setModalOpen(false)}
+          onClose={() => setMenuOpen(false)}
         />
       )}
     </div>

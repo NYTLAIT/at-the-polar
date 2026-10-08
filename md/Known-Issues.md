@@ -1,2 +1,3 @@
 - Unclear naming, ex creationResultAlert (serverEvents.js) is a callback
 - no insta connect after refresh page
+- Alerts are console.log not on the application as of rn

@@ -1,7 +1,3 @@
-function getUser() {
-  return state.users.get(socket.data.username)
-}
-
 // ------ LOGIN AND DISCONNECT --------------------------------
 export function setConnection(socket, state) {
   socket.on('login', (username, role) => {
@@ -41,6 +37,10 @@ export function setConnection(socket, state) {
 
 // ------ SETTING STATIONS -----------------------------------
 export function setStations(io, socket, state) {
+  function getUser() {
+    return state.users.get(socket.data.username)
+  }
+
   // GET USER STATIONS LIST
   socket.on('getStations', (setStations) => {
     const user = getUser()
@@ -78,6 +78,9 @@ export function setStations(io, socket, state) {
   // Subscibe
   socket.on('subscribeStation', (stationName, resultAlert) => {
     const user = getUser()
+    if (user.stations.memberOf?.includes(stationName)) {
+      return resultAlert?.('Members cannot subscribe to their own stations')
+    }
 
     user.stations.subscribed.push(stationName)
     socket.emit('stationsChanged')
@@ -99,6 +102,7 @@ export function setStations(io, socket, state) {
     }
 
     user.stations.memberOf.push(stationName)
+    user.stations.subscribed = user.stations.subscribed.filter((station) => station !== stationName)
     socket.emit('stationsChanged')
     resultAlert?.(`Joined ${stationName}`)
   })
