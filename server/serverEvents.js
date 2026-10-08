@@ -37,9 +37,7 @@ export function setConnection(socket, state) {
 
 // ------ SETTING STATIONS -----------------------------------
 export function setStations(io, socket, state) {
-  function getUser() {
-    return state.users.get(socket.data.username)
-  }
+  const getUser = () => state.users.get(socket.data.username)
 
   // GET USER STATIONS LIST
   socket.on('getStations', (setStations) => {
@@ -123,4 +121,9 @@ export function setStations(io, socket, state) {
     socket.emit('stationsChanged')
     resultAlert?.(`Left ${stationName}`)
   })
+}
+
+// ------ SETTING MESSAGES -----------------------------------
+export function setMessages(io, socket, state) {
+  const getUser = () => state.users.get(socket.data.username)
 }

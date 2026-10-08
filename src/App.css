@@ -9,3 +9,32 @@
     z-index: 1;
     background: white;
 }
+
+
+/* FOR SLIDING MECHANISM OF CHAT AND WINDOW */
+.AppContainer {
+    display: block
+}
+
+.list-panel {
+    width: 100%
+}
+
+.AppContainer:has(.chat-panel:not(:empty)) .list-panel {
+    display: none
+}
+
+@media (min-width: 768px) {}
+
+.AppContainer {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+
+.list-panel {
+    display: block !important
+}
+
+.chat-back-link {
+    display: none;
+}

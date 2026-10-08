@@ -43,44 +43,48 @@ function Stations() {
     <div>
       <Header />
 
-      {/* ------ STATIONS LIST ----------- */}
-      <div className='Stations'>
-        {/* -- Allow researchers only to create new stations */}
-        {stations.role === 'researcher' &&
-          <button onClick={handleStationCreation}>+ New station</button>
-        }
-        {/* -- Handle if no stations yet */}
-        {stations.allStations.length === 0 && <p>No stations yet</p>}
+      <div className="AppContainer">
 
-        {/* -- STATIONS */}
-        <div className="stationsList">
-          {/* Member of */}
-          {memberOf.length > 0 && (
-            <>
-              <h4>MEMBER OF</h4>
-              {memberOf.map(renderStation)}
-            </>
-          )}
-          {/* Subscribed */}
-          {subscribed.length > 0 && (
-            <>
-              <h4>SUBSCRIBED</h4>
-              {subscribed.map(renderStation)}
-            </>
-          )}
-          {/* Other */}
-          {other.length > 0 && (
-            <>
-              <h4>ALL STATIONS</h4>
-              {other.map(renderStation)}
-            </>
-          )}
+        {/* ------ STATIONS LIST ----------- */}
+        <div className='Stations list-panel'>
+          {/* -- Allow researchers only to create new stations */}
+          {stations.role === 'researcher' &&
+            <button onClick={handleStationCreation}>+ New station</button>
+          }
+          {/* -- Handle if no stations yet */}
+          {stations.allStations.length === 0 && <p>No stations yet</p>}
+
+          {/* -- STATIONS */}
+          <div className="stationsList">
+            {/* Member of */}
+            {memberOf.length > 0 && (
+              <>
+                <h4>MEMBER OF</h4>
+                {memberOf.map(renderStation)}
+              </>
+            )}
+            {/* Subscribed */}
+            {subscribed.length > 0 && (
+              <>
+                <h4>SUBSCRIBED</h4>
+                {subscribed.map(renderStation)}
+              </>
+            )}
+            {/* Other */}
+            {other.length > 0 && (
+              <>
+                <h4>ALL STATIONS</h4>
+                {other.map(renderStation)}
+              </>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* ------ STATION CHAT ----------- */}
-      <div className='Station'>
-        <Outlet />
+        {/* ------ STATION CHAT ----------- */}
+        <div className='Station chat-panel'>
+          <Outlet context={stations} />
+        </div>
+
       </div>
 
       <Footer />
