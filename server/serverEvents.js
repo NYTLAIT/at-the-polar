@@ -1,3 +1,7 @@
+function getUser() {
+  return state.users.get(socket.data.username)
+}
+
 // ------ LOGIN AND DISCONNECT --------------------------------
 export function setConnection(socket, state) {
   socket.on('login', (username, role) => {
@@ -39,7 +43,7 @@ export function setConnection(socket, state) {
 export function setStations(io, socket, state) {
   // GET USER STATIONS LIST
   socket.on('getStations', (setStations) => {
-    const user = state.users.get(socket.data.username)
+    const user = getUser()
 
     setStations({
       role: user.role,
@@ -49,8 +53,9 @@ export function setStations(io, socket, state) {
     })
   })
 
+  // CREATE STATION
   socket.on('createStation', (stationName, creationResultAlert) => {
-    const user = state.users.get(socket.data.username)
+    const user = getUser()
 
     if (user.role !== 'researcher') {
       return creationResultAlert('Only researchers can create stations')
@@ -69,5 +74,45 @@ export function setStations(io, socket, state) {
     // Update everybody about state
     io.emit('stationsChanged')
     creationResultAlert('New Station Created!')
+  })
+
+  // SUBSCRIPTIONS && JOINS
+  // Subscibe
+  socket.on('subscribeStation', (stationName, resultAlert) => {
+    const user = getUser()
+
+    user.stations.subscribed.push(stationName)
+    socket.emit('stationsChanged')
+    resultAlert?.(`Subscribed to ${stationName}`)
+  })
+  // Unsubscibe
+  socket.on('unsubscribeStation', (stationName, resultAlert) => {
+
+    const user = getUser()
+    user.stations.subscribed = user.stations.subscribed.filter(station => station !== stationName)
+    socket.emit('stationsChanged')
+    resultAlert?.(`Unsubscribed to ${stationName}`)
+  })
+  // Join
+  socket.on('joinStation', (stationName, resultAlert) => {
+    const user = getUser()
+    if (user.role !== 'researcher') {
+      return resultAlert?.('Only researchers can join stations')
+    }
+
+    user.stations.memberOf.push(stationName)
+    socket.emit('stationsChanged')
+    resultAlert?.(`Joined ${stationName}`)
+  })
+  // Unjoin
+  socket.on('unjoinStation', (stationName, resultAlert) => {
+    const user = getUser()
+    if (user.role !== 'researcher') {
+      return resultAlert?.('Only researchers can join stations')
+    }
+
+    user.stations.memberOf = user.stations.memberOf.filter(station => station !== stationName)
+    socket.emit('stationsChanged')
+    resultAlert?.(`Left ${stationName}`)
   })
 }
