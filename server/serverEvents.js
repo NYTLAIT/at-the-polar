@@ -44,6 +44,7 @@ export function setStations(io, socket, state) {
   // GET USER STATIONS LIST
   socket.on('getStations', (setStations) => {
     const user = getUser()
+    if (!user) return
 
     setStations({
       role: user.role,
@@ -56,6 +57,7 @@ export function setStations(io, socket, state) {
   // CREATE STATION
   socket.on('createStation', (stationName, creationResultAlert) => {
     const user = getUser()
+    if (!user) return
 
     if (user.role !== 'researcher') {
       return creationResultAlert('Only researchers can create stations')
@@ -78,6 +80,7 @@ export function setStations(io, socket, state) {
   // Subscibe
   socket.on('subscribeStation', (stationName, resultAlert) => {
     const user = getUser()
+    if (!user) return
     if (user.stations.memberOf?.includes(stationName)) {
       return resultAlert?.('Members cannot subscribe to their own stations')
     }
@@ -88,8 +91,9 @@ export function setStations(io, socket, state) {
   })
   // Unsubscibe
   socket.on('unsubscribeStation', (stationName, resultAlert) => {
-
     const user = getUser()
+    if (!user) return
+
     user.stations.subscribed = user.stations.subscribed.filter(station => station !== stationName)
     socket.emit('stationsChanged')
     resultAlert?.(`Unsubscribed to ${stationName}`)
@@ -97,6 +101,7 @@ export function setStations(io, socket, state) {
   // Join
   socket.on('joinStation', (stationName, resultAlert) => {
     const user = getUser()
+    if (!user) return
     if (user.role !== 'researcher') {
       return resultAlert?.('Only researchers can join stations')
     }
@@ -109,6 +114,7 @@ export function setStations(io, socket, state) {
   // Unjoin
   socket.on('leaveStation', (stationName, resultAlert) => {
     const user = getUser()
+    if (!user) return
     if (user.role !== 'researcher') {
       return resultAlert?.('Only researchers can join stations')
     }
