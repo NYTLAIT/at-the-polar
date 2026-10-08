@@ -10,7 +10,10 @@ export function setFeatures(io) {
     stations: new Map()
   }
 
-  setConnection(io, state)
+  io.on('connection', socket => {
+    setConnection(socket, state)
+    setStations(socket, state)
+  })
 }
 
 
