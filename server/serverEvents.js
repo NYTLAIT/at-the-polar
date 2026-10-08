@@ -128,6 +128,21 @@ export function setMessages(io, socket, state) {
   const getUser = () => state.users.get(socket.data.username)
 
   // GET MESSAGES OF A STATION
-  socket.on('getMessages', (stationName, messages))
+  socket.on('getMessages', (stationName, setMessages) => {
+    const station = station.stations.get(stationName)
+    if (!getUser() || !station) return setMessages?.([])
+
+    setMessages?.(station.messages)
+  })
+
+  // SEND MESSAGE
+  socket.on('sendMessage', (stationName, message, resultAlert) => {
+    const user = getUser()
+    const station = station.stations.get(stationName)
+    if (!user || !station) return resultAlert?.('Station not found')
+
+    const message = text?.trim
+
+  })
 
 }
