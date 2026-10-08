@@ -42,4 +42,12 @@ At The Polar uses WebSockets for:
 5. Start the client with `npm run dev`
 6. Open the Vite typically on `http://localhost:5173`
 
+# Future Improvements
+- Styling
+- Database persistence
+- Authentication
+- Message pagination
+- Image uploads
+- Search functionality
+
 #### Dev: NYTLAIT
