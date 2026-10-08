@@ -4,7 +4,6 @@ import { Link } from "react-router"
 import { useClickOutside } from "./hooks/useClickOutside"
 import StationsOptionsMenu from "./StationsOptionsMenu"
 
-
 function StationsThumbnail({ stationName, role, isSubscribed, isMember }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const wrapperRef = useRef(null)

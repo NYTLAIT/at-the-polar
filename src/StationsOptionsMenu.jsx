@@ -1,4 +1,4 @@
-import { subscribeStation, unsubscribeStation, joinStation, leaveStation } from "./socket/clientEvents"
+import { subscribeStation, unsubscribeStation, joinStation, leaveStation } from "at-the-polar-module"
 
 function StationsOptionsMenu(prop) {
   const { stationName, role, isSubscribed, isMember, onClose } = prop

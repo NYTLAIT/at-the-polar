@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router"
-import { connect } from "./socket/clientEvents"
+
+import { connect } from 'at-the-polar-module'
 
 function Login() {
   const navigate = useNavigate()

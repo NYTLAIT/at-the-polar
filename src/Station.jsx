@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link, useParams, useOutletContext } from "react-router"
-import { getMessages, postMessage, replyToMessage } from './socket/clientEvents'
+
+import { getMessages, postMessage, replyToMessage } from "at-the-polar-module"
 
 function Message({ messageObject, canReply, onReply }) {
   return (

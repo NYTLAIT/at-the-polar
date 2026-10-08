@@ -3,7 +3,7 @@ import { createServer } from 'node:http'
 import { Server } from 'socket.io'
 import cors from 'cors'
 
-import { setFeatures } from './state.js'
+import { setFeatures } from 'at-the-polar-module'
 
 // EXPRESS & HTTP INTILIAZATION
 const app = express()

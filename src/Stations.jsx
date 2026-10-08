@@ -5,8 +5,7 @@ import Footer from './Footer'
 import StationsThumbnail from './StationsThumbnail'
 import './App.css'
 
-import { getStations } from './socket/clientEvents'
-import { createStation } from './socket/clientEvents'
+import { getStations, createStation } from 'at-the-polar-module'
 
 function Stations() {
   const [stations, setStations] = useState({

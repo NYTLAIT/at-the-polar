@@ -2,11 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router'
 
-import { isConnected } from './socket/clientEvents.js'
-
 import Login from './Login.jsx'
 import Stations from './Stations.jsx'
 import Station from './Station.jsx'
+
+import { isConnected } from 'at-the-polar-module'
 
 function RequireLogin({ children }) {
   return isConnected() ? children : <Navigate to='/' replace />
