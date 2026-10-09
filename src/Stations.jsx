@@ -39,10 +39,10 @@ function Stations() {
   )
 
   return (
-    <div>
-      <Header />
+    <div className='min-h-screen flex flex-col'>
+      {/* <Header /> */}
 
-      <div className="AppContainer">
+      <div className="AppContainer flex flex-1">
 
         {/* ------ STATIONS LIST ----------- */}
         <div className='Stations list-panel'>
@@ -86,7 +86,7 @@ function Stations() {
 
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }
